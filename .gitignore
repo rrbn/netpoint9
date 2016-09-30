@@ -1,0 +1,14 @@
+binary/
+live-*
+tftpboot/
+.build
+build.log
+cache/
+chroot/
+chroot.*
+deploy/
+deploy.sh
+tftpboot/
+local
+readme
+authorized_keys
