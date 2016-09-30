@@ -1,0 +1,82 @@
+#!/bin/sh
+
+## live-config(7) - System Configuration Scripts
+## Copyright (C) 2006-2013 Daniel Baumann <daniel@debian.org>
+##
+## This program comes with ABSOLUTELY NO WARRANTY; for details see COPYING.
+## This is free software, and you are welcome to redistribute it
+## under certain conditions; see COPYING for details.
+
+#set -e
+
+#host=$HOSTNAME
+
+#fake
+#host="host18457464"
+#rtckey="NetPointKey"
+#rtcrepo="git@github.com:/eqsoft/nprtc"
+#rtchost="1"
+#rtcgrp="master"
+
+# if rtckey in npgate.php is et you must reset the password of the private key in chroot env: 
+# ssh-keygen -p etc/ssh/id_rsa
+
+#gitpath=""
+
+# just a hack for my virtual network nat device
+# ToDo: request multiple network devices
+if [ "$host" = "host18457464" ]
+then
+	echo "eth1 detected"
+	dhclient eth1
+	sleep 5
+fi
+
+Cmdline ()
+{
+	# Reading kernel command line
+	for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+	do
+		case "${_PARAMETER}" in
+			live-config.username=*|username=*)
+				echo "${_PARAMETER}" >> /etc/environment
+				;;
+			x*=*)
+				echo "${_PARAMETER}" >> /etc/environment
+				eval "${_PARAMETER}"
+				;;
+		esac
+	done
+}
+
+Rtc () {
+	echo "Rtc"
+	
+	# start ssh agent only if rtcssh is defined
+	if [ ! -z "${xrtcssh}" ] ; then
+		. /usr/local/bin/start_ssh
+	fi
+
+	if [ -z "${xrtcrepo}" ] ; then
+		echo "no rtcrepo setting"
+		return 0
+	fi
+
+	if [ "${xrtcrepo}" = "git" ] ; then
+		. /usr/local/bin/rtc_git
+		return 0
+	fi
+
+	if [ "${xrtcrepo}" = "svn" ] ; then
+		. /usr/local/bin/rtc_svn
+		return 0
+	fi
+
+	if [ "${xrtcrepo}" = "tgz" ] ; then
+		. /usr/local/bin/rtc_tgz
+		return 0
+	fi
+}
+
+Cmdline
+Rtc

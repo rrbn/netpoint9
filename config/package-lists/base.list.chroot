@@ -1,0 +1,13 @@
+xorg 
+locales
+user-setup 
+console-setup
+nodm
+sudo
+openssh-server 
+xscreensaver 
+openbox 
+tint2
+feh
+git
+numlockx

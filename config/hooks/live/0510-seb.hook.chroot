@@ -1,0 +1,45 @@
+#!/bin/sh
+
+## live-build(7) - System Build Scripts
+## Copyright (C) 2006-2013 Daniel Baumann <daniel@debian.org>
+##
+## This program comes with ABSOLUTELY NO WARRANTY; for details see COPYING.
+## This is free software, and you are welcome to redistribute it
+## under certain conditions; see COPYING for details.
+
+set -e
+
+if [ -d '/etc/firefox-esr' ]
+then
+	ln -sf /etc/firefox-esr /etc/firefox	
+fi
+
+if [ -d '/usr/lib/firefox-esr' ]
+then
+	ln -sf /usr/lib/firefox-esr /usr/lib/firefox	
+fi
+
+# fetch seb1 repo
+
+if [ ! -d "/opt/seb1" ] 
+then
+	mkdir -p /opt/seb1
+	cd /opt/seb1
+	wget --no-check-certificate -qO- https://github.com/eqsoft/seb/tarball/master | tar xz
+	mv eqsoft-seb-*/browser/apps  /opt/seb1
+	rm -r eqsoft-seb-*
+fi
+
+# fetch seb2 repo
+
+if [ ! -d "/opt/seb2" ] 
+then
+	mkdir -p /opt/seb2
+	cd /opt/seb2
+	wget --no-check-certificate -qO- https://github.com/eqsoft/seb2/tarball/master | tar xz
+	mv eqsoft-seb2-*/browser  /opt/seb2
+	rm -r eqsoft-seb2-*
+	rm -r browser/bin
+fi
+
+exit 0

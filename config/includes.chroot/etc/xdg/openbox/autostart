@@ -1,0 +1,10 @@
+set_mouse_speed &
+set_noblank &
+start_numlock &
+start_xscreensaver &
+start_feh &
+start_panel &
+start_browser &
+start_xscreensaver_watch &
+sudo flush_logs &
+sudo lock_cmdline &

@@ -1,0 +1,9 @@
+[Unit]
+Description=set time per timedatectl
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/set_time 
+
+[Install]
+WantedBy=multi-user.target
