@@ -1,4 +1,6 @@
 xorg 
+dbus
+dbus-x11
 locales
 user-setup 
 console-setup
@@ -11,3 +13,4 @@ tint2
 feh
 git
 numlockx
+intel-microcode
