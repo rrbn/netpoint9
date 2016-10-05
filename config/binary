@@ -10,7 +10,7 @@ LB_APT_INDICES="false"
 
 # $LB_BOOTAPPEND_LIVE: set boot parameters
 # (Default: empty)
-LB_BOOTAPPEND_LIVE="boot=live components config locales=de_DE.UTF-8 locale=de_DE.UTF-8 keyboard-layouts=de username=npuser xpanel=1 xnumlock=1 xexit=1 xterminal=1 xscreensaver=1 xscreensaverwatch=1 xrtckey=password"
+LB_BOOTAPPEND_LIVE="boot=live components config locales=de_DE.UTF-8 keyboard-layouts=de username=npuser xpanel=1 xnumlock=1 xexit=1 xterminal=1 xscreensaver=1 xscreensaverwatch=1 xrtckey=password"
 
 # $LB_BOOTAPPEND_INSTALL: set boot parameters
 # (Default: empty)
