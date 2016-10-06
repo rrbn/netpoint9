@@ -1,11 +1,12 @@
 # cat /etc/systemd/system/dhclient.service 
 [Unit]
 Description=dhclient on all interfaces
-Wants=network.target
-Before=network.target
+Wants=network-online.target
+After=network.target network-online.target
 
 [Service]
-ExecStart=/usr/bin/dhclient -4 -q
+Type=forking
+ExecStart=/sbin/dhclient -4 -q
 
 [Install]
 WantedBy=multi-user.target

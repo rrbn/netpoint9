@@ -18,4 +18,5 @@ NODM_X_OPTIONS='-nolisten tcp'
 
 # If an X session will run for less than this time in seconds, nodm will wait an
 # increasing bit of time before restarting the session.
-NODM_MIN_SESSION_TIME=60
+NODM_MIN_SESSION_TIME=5
+NODM_X_TIMEOUT=20

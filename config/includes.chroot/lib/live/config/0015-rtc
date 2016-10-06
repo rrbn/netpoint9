@@ -25,12 +25,12 @@
 
 # just a hack for my virtual network nat device
 # ToDo: request multiple network devices
-if [ "$host" = "host18457464" ]
-then
-	echo "eth1 detected"
-	dhclient eth1
-	sleep 5
-fi
+#if [ "$host" = "host18457464" ]
+#then
+#	echo "eth1 detected"
+#	dhclient eth1
+#	sleep 5
+#fi
 
 Cmdline ()
 {

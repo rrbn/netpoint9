@@ -35,12 +35,27 @@ auto lo
 iface lo inet loopback
 
 EOF
-	# setting hostname from first dhcp (custom extension netpoint9)
+	# setting hostname from kernel param and if empty get it from first dhcp request in initrd (custom extension netpoint9)
 	log_begin_msg "Preconfiguring hostname"
 	
 	if [ "${NETBOOT}" = "nfs" ]
 	then
-		echo "${HOSTNAME}" > /root/etc/hostname
+		# First reading kernel command line
+		for _PARAMETER in ${LIVE_BOOT_CMDLINE}
+		do
+			case "${_PARAMETER}" in
+				hostname=*)
+					HOSTNAME="${_PARAMETER#*hostname=}"
+					;;
+			esac
+		done
+		if [ ! -z "${HOSTNAME}" ]
+		then
+			# hard coded hostname in rootfs
+			# don't understand the dynamic configuration in config stage (see 0020-hostname.sh)
+			# normally the dhclient should config the hostname, but that does not work
+			echo "${HOSTNAME}" > /root/etc/hostname
+		fi
 	fi
 	log_end_msg
 	
