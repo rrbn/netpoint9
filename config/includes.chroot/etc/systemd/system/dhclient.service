@@ -1,8 +1,9 @@
 # cat /etc/systemd/system/dhclient.service 
 [Unit]
 Description=dhclient on all interfaces
-Wants=network-online.target
-After=network.target network-online.target
+Wants=network-online.target set-time.service
+After=network.target network-online.target set-time.service
+DefaultDependencies=no
 
 [Service]
 Type=forking

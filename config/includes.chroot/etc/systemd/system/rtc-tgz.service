@@ -1,0 +1,16 @@
+[Unit]
+Description=getting runtime config as tar.gz file from remote repo
+Before=basic.target
+ConditionKernelCommandLine=xrtcrepo=tgz
+ConditionPathExists=/etc/environment
+After=rtc.service
+DefaultDependencies=no
+JobTimeoutSec=15
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/rtc_tgz
+RemainAfterExit=yes
+
+[Install]
+WantedBy=basic.target

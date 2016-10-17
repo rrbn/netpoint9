@@ -1,0 +1,14 @@
+[Unit]
+Description=setting runtime environment variables for netpoint and executes runtime config scripts.
+Before=basic.target
+After=local-fs.target
+DefaultDependencies=no
+ConditionPathExists=/usr/local/bin/rtc
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/rtc
+RemainAfterExit=yes
+
+[Install]
+WantedBy=basic.target

@@ -1,14 +1,12 @@
 firmware-linux-free
 firmware-linux-nonfree
-intel-microcode
-nano
 isc-dhcp-client
-xorg 
+nano
+xorg
 dbus
 dbus-x11
 locales
-user-setup 
-console-setup
+user-setup
 nodm
 sudo
 openssh-server 

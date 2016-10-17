@@ -9,6 +9,8 @@
 
 set -e
 
+. /etc/environment
+
 # just a hack for my virtual network
 
 StoreProfile ()
