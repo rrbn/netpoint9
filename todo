@@ -1,7 +1,3 @@
 ToDos:
-
-debug generator
-- journald.conf storage none
-- systemd.conf logging
-
-#graphical.target
+- console getty service with locales support
+- avoid duplicate panel entries on target isolating
