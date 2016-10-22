@@ -1,0 +1,79 @@
+#!/bin/sh
+
+## enable isolating graphical.target and multi-user.target
+
+## enable netpoint systemd custom services within certain runlevels (early user-space)
+
+## Enable the services with systemd.preset (https://www.freedesktop.org/software/systemd/man/systemd.preset.html) does not work
+
+echo "rtc generator"
+SYSTEM_ETC="/etc/systemd/system"
+SYSTEM_LIB="/lib/systemd/system"
+BASIC_TARGET="basic.target.wants"
+MULTIUSER_TARGET="multi-user.target.wants"
+GRAPHICAL_TARGET="graphical.target.wants"
+LOGIND_SERVICE="systemd-logind.service"
+ASKPWD_SERVICE="systemd-ask-password-wall.path"
+USER_SESSION="systemd-user-sessions.service"
+RUN_NODM="/run/systemd/generator.late/multi-user.target.wants/nodm.service"
+
+# disable nodm runlevel less then 5
+for _RC in rc2.d rc3.d rc4.d
+do
+	NODM="$(ls /etc/${_RC}/*nodm)"
+	if [ -e "${NODM}" ]
+	then
+		rm "${NODM}"
+		cd /etc/${_RC} && ln ../init.d/nodm K01nodm
+	fi
+done
+
+# mv session into graphical target
+for _SERVICE in "${LOGIND_SERVICE}" "${ASKPWD_SERVICE}" "${USER_SESSION}" 
+do
+	mv "${SYSTEM_LIB}/${MULTIUSER_TARGET}/${_SERVICE}" "${SYSTEM_LIB}/${GRAPHICAL_TARGET}/"
+done
+
+if [ -e "${RUN_NODM}" ]
+then
+	rm "${RUN_NODM}"
+fi
+
+# delete unused live components
+for _COMP in debconf gdm3 kdm lightdm lxdm slim gnome-panel-data gnome-power-manager gnome-screensaver kaboom kde-services policykit ssl-cert anacron xfce4-panel xscreensaver broadcom-sta
+do
+	COMP="$(ls /lib/live/config/????-${_COMP})"
+	if [ -e "${COMP}" ]
+	then
+		rm "${COMP}"
+	fi
+done
+
+# enable custom services
+if [ ! -d "${SYSTEM_ETC}/${BASIC_TARGET}" ]
+then
+	mkdir "${SYSTEM_ETC}/${BASIC_TARGET}"
+fi
+
+if [ ! -d "${SYSTEM_ETC}/${MULTIUSER_TARGET}" ]
+then
+	mkdir "${SYSTEM_ETC}/${MULTIUSER_TARGET}"
+fi
+
+for _SERVICE in rtc.service rtc-tgz.service
+do
+	if [ -e "${SYSTEM_ETC}/${_SERVICE}" ]
+	then
+		ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${BASIC_TARGET}/"
+	fi
+done
+ 
+for _SERVICE in set-time.service dhclient.service
+do
+	if [ -e "${SYSTEM_ETC}/${_SERVICE}" ]
+	then
+		ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${MULTIUSER_TARGET}/"
+	fi
+done
+
+exit $?

@@ -1,0 +1,7 @@
+ToDos:
+
+debug generator
+- journald.conf storage none
+- systemd.conf logging
+
+#graphical.target

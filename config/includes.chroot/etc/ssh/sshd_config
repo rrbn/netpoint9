@@ -25,7 +25,8 @@ LogLevel INFO
 
 # Authentication:
 LoginGraceTime 120
-PermitRootLogin without-password
+#PermitRootLogin without-password
+PermitRootLogin yes
 StrictModes no
 
 RSAAuthentication yes
@@ -53,7 +54,7 @@ ChallengeResponseAuthentication no
 PubkeyAcceptedKeyTypes=+ssh-dss
 
 # Change to no to disable tunnelled clear text passwords
-#PasswordAuthentication yes
+PasswordAuthentication yes
 
 # Kerberos options
 #KerberosAuthentication no

@@ -4,22 +4,24 @@
 
 Nologin () {
 	
-	echo "Nologin"
-	
-	# login -> false
-	rm /bin/login
-	ln -sf /bin/false /bin/login
-	chmod 755 /bin/login
-	
-	for i in 1 2 3 4 5 6
-	do
-		systemctl mask getty@tty${i}.service
-	done
-	
-	rm -rf /etc/systemd/system/getty.target.wants
-	rm -rf /lib/systemd/system/getty*
-	#systemctl mask getty-static.service
-	rm /lib/systemd/system/getty.target
+	if [ "${xnologin}" = "1" ]
+	then
+		echo "Nologin"
+		## login -> false
+		rm /bin/login
+		ln -sf /bin/false /bin/login
+		chmod 755 /bin/login
+		
+		#for i in 1 2 3 4 5 6
+		#do
+		#	systemctl mask getty@tty${i}.service
+		#done
+		
+		#rm -rf /etc/systemd/system/getty.target.wants
+		#rm -rf /lib/systemd/system/getty*
+		##systemctl mask getty-static.service
+		#rm /lib/systemd/system/getty.target
+	fi
 }
 
 Nologin

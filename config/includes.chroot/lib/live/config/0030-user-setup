@@ -7,7 +7,7 @@
 ## This is free software, and you are welcome to redistribute it
 ## under certain conditions; see COPYING for details.
 
-# set -e
+set -e
 
 . /etc/environment
 
@@ -34,6 +34,7 @@ Cmdline ()
 
 Init ()
 {
+	echo -n "Init"
 	# Checking if package is installed or already configured
 	if [ ! -e /var/lib/dpkg/info/user-setup.list ] || \
 	   [ -e /var/lib/live/config/user-setup ]
@@ -46,38 +47,43 @@ Init ()
 
 Config ()
 {
+	echo -n "Config"
 	# Checking if package is already configured differently
 	if grep -q "^${LIVE_USERNAME}:" /etc/passwd
 	then
 		exit 0
 	fi
-
+	#echo "1"
 	# Adjust formating of groups
 	if [ -n "${LIVE_USER_DEFAULT_GROUPS}" ]
 	then
 		LIVE_USER_DEFAULT_GROUPS="$(echo ${LIVE_USER_DEFAULT_GROUPS} | sed -e 's|,| |g')"
 	fi
-
+	#echo "2"
 	# Make sure user is not in sudo group if sudo is disabled
 	case "${LIVE_CONFIG_NOROOT}" in
 		true)
 			LIVE_USER_DEFAULT_GROUPS="$(echo ${LIVE_USER_DEFAULT_GROUPS} | sed -e 's|sudo||')"
 			;;
 	esac
-
+	
+	#echo "3"
 	# Default password is: live
 	# passwords can be generated with 'echo "live" | mkpasswd -s',
-	# a blank password is 'U6aMy0wojraho'.
-	_PASSWORD="8Ab05sVQ4LLps"
-	if [ ! -z "${xrtckey}" ] 
+	
+	# _LIVE (default and disable empty password login in /etc/pam/common-auth: removed "nullok_secure")
+	_LIVE='8Ab05sVQ4LLps'
+	_EMPTY='U6aMy0wojraho'
+	_PASSWORD="${_LIVE}"
+	if [ ! -z "${xrootpwd}" ] 
 	then
-		_PASSWORD="$(echo ${xrtckey} | /usr/local/bin/mkpasswd -s)" 
+		_PASSWORD="${xrootpwd}"
 	fi 
-
+	
 cat > /tmp/live-config.cfg << EOF
 user-setup passwd/make-user boolean true
 user-setup passwd/root-password-crypted string *
-user-setup passwd/user-password-crypted string ${_PASSWORD}
+user-setup passwd/user-password-crypted string *
 user-setup passwd/user-default-groups string ${LIVE_USER_DEFAULT_GROUPS}
 user-setup passwd/user-fullname string ${LIVE_USER_FULLNAME}
 user-setup passwd/username string ${LIVE_USERNAME}
@@ -93,9 +99,9 @@ EOF
 	| grep -v "Shadow passwords are now on"
 	set -e
 	
-	if [ ! -z "${xrtckey}" ] 
+	# assign root password
+	if [ ! -z "${xrootpwd}" ] 
 	then
-		# assign root password
 		echo "root:${_PASSWORD}" | chpasswd -e
 	fi
 	
