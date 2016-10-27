@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ "${xexit}" == "1" ]
+then
+	echo "launcher_item_app = /usr/share/applications/exit.desktop" >> ~/.config/tint2/tint2rc
+fi
+
+if [ "${xterminal}" == "1" ]
+then
+	echo "launcher_item_app = /usr/share/applications/xterm.desktop" >> ~/.config/tint2/tint2rc
+fi
+
+if [ "${xpanel}" == "1" ]
+then
+	while [ ! $(pidof tint2) ] ; do
+		tint2
+	done
+fi

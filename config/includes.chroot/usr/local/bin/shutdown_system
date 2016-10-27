@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# shutdown_system
+#
+
+systemctl -ff poweroff -f

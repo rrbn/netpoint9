@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ "${xnumlock}" == "1" ]
+then
+	numlockx &
+fi

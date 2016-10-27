@@ -1,0 +1,62 @@
+#!/bin/bash
+
+OPTS=""
+PROFILE="/home/${username}/browser_profile"
+OVERLAY_PROFILE=""
+CMD=""
+CONFIG=""
+FIREFOX="firefox"
+
+if [ -d "/etc/firefox-esr" ] 
+then
+	FIREFOX="firefox-esr"
+fi
+
+if [ ! -d "${PROFILE}" ]
+then
+	mkdir "${PROFILE}"
+fi
+
+if [ "${xbrowser}" == "firefox" ]
+then
+	OVERLAY_PROFILE="/etc/${FIREFOX}/profile/*"
+	CMD="${FIREFOX}"
+fi
+
+if [ "${xbrowser}" == "seb2" ]
+then
+	CONFIG="/etc/seb2/config.json"
+	OVERLAY_PROFILE="/etc/seb2/profile/*"
+        CMD="${FIREFOX} -app /opt/seb2/browser/app/seb.ini -config ${CONFIG}"
+fi
+
+if [ "${xbrowser}" == "seb1" ]
+then
+	CONFIG="/etc/seb1/config.json"
+	OVERLAY_PROFILE="/etc/seb1/profile/*"
+        CMD="${FIREFOX} -app /opt/seb1/apps/seb.ini -configpath ${CONFIG}"
+fi
+
+if [ -z "${CMD}" ]
+then
+	echo "No browser defined"
+	exit 0
+fi
+
+# populate browser profile
+${CMD} -silent -profile ${PROFILE}
+
+sleep 2
+
+# copy custom profile files
+cp -a ${OVERLAY_PROFILE} ${PROFILE}
+
+if [ ! -z "${xbrowseropts}" ]
+then
+	# replace options "," with " ".
+	OPTS="${xbrowseropts//,/ }"
+fi
+
+while [ ! $(pidof "${FIREFOX}") ] ; do
+	${CMD} -profile ${PROFILE} ${OPTS}
+done

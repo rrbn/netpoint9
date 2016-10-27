@@ -1,0 +1,74 @@
+#!/bin/sh
+#
+# exit_browser
+#
+
+. /etc/environment
+
+FIREFOX="firefox"
+
+if [ -d "/etc/firefox-esr" ] 
+then
+	FIREFOX="firefox-esr"
+fi
+
+# first exit all start_xxx process loops (see /etc/xdg/openbox/autostart)
+if [ $(pidof -x start_browser) ] 
+then
+	su $username -c "pkill start_browser"
+fi
+
+if [ $(pidof -x start_panel) ] 
+then
+	su $username -c "pkill start_panel"
+fi
+
+if [ $(pidof -x start_feh) ] 
+then
+	su $username -c "pkill start_feh"
+fi
+
+if [ $(pidof -x start_xscreensaver) ] 
+then
+	su $username -c "pkill start_xscreensaver"
+fi
+
+# kill xscreensaver eventlistener for browser restart  
+if [ $(pidof -x start_xscreensaver_watch) ] 
+then
+	su $username -c "pkill start_xscreensaver_watch"
+fi
+
+# kill processes (seb uses firefox too)
+
+if [ $(pidof -x "${FIREFOX}") ] 
+then
+	su $username -c "pkill ${FIREFOX}"
+fi
+
+if [ $(pidof -x tint2) ] 
+then
+	su $username -c "pkill tint2"
+fi
+
+if [ $(pidof -x feh) ] 
+then
+	su $username -c "pkill feh"
+fi
+
+if [ $(pidof -x xscreensaver) ] 
+then
+	su $username -c "pkill xscreensaver"
+fi
+
+# restore profile
+if [ -f "/home/${username}.tgz" ]
+then 
+	cd /home
+	rm -rf "${username}"
+	tar xf "${username}.tgz"
+fi
+sleep 2
+
+# exit openbox (see rc.local startx loop)
+su $username -c "openbox --exit"

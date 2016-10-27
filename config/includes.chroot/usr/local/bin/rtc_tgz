@@ -1,0 +1,27 @@
+#!/bin/sh
+
+. /etc/environment
+
+echo "exec rtc-tgz"
+
+if [ -z "${xtgzurl}" ] ; then
+	echo "tgzurl needed, aborted!"
+	exit 1
+fi
+
+if [ -z "${xrtcagent}" ] ; then
+	echo "xrtcagent needed, aborted!"
+	exit 1
+fi
+
+if [ "${xtgzhost}" = "1" ] ; then
+	tgzurl="${xtgzurl}/${host}.tgz"
+fi
+
+echo "try to load rtc tgz file: ${xtgzurl}"
+cd /tmp && wget --user-agent="${xrtcagent}" --no-check-certificate -qO- $xtgzurl | tar xz && cp -r fs_overlay/* / && rm -r fs_overlay
+
+echo "rtc-tgz done"
+exit $?
+
+

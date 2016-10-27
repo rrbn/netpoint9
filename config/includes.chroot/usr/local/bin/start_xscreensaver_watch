@@ -1,0 +1,35 @@
+#!/bin/sh
+FIREFOX="firefox"
+
+if [ -d "/etc/firefox-esr" ] 
+then
+	FIREFOX="firefox-esr"
+fi
+blank() {
+	echo "blank"
+	if [ $(pidof "${FIREFOX}") ] ; then
+		`pkill ${FIREFOX}`
+	fi
+	if [ $(pidof "${FIREFOX"}) ] ; then
+		`pkill ${FIREFOX}`
+	fi
+}
+ 
+unblank() {
+    # do nothing
+    echo "unblank"
+}
+
+if [ -z "${xscreensaver}" ]
+then
+	exit
+fi
+
+if [ ! -z "${xscreensaverwatch}" ]
+then
+	xscreensaver-command -watch | while read a; do
+	    echo "$a" | grep -q '^BLANK' && blank
+	    echo "$a" | grep -q '^UNBLANK' && unblank
+	done
+fi
+

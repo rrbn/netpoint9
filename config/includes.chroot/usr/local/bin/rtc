@@ -1,0 +1,24 @@
+#!/bin/sh
+
+echo "exec rtc"
+
+echo "host=$(cat /etc/hostname)" >> /etc/environment
+
+LIVE_CONFIG_CMDLINE="${LIVE_CONFIG_CMDLINE:-$(cat /proc/cmdline)}"
+
+for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+do
+	case "${_PARAMETER}" in
+		username=*)
+			echo "${_PARAMETER}" >> /etc/environment
+			;;
+		debug)
+			echo "debug=1" >> /etc/environment
+			;;
+		x*=*)
+			echo "${_PARAMETER}" >> /etc/environment
+			;;
+	esac
+done
+
+exit $?

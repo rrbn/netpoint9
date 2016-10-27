@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "${xnoblank}" == "1" ]
+then
+	xset -dpms
+	xset s off
+	xset s noblank
+fi
