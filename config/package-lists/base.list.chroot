@@ -7,7 +7,6 @@ dbus
 dbus-x11
 locales
 user-setup
-console-setup
 nodm
 sudo
 openssh-server 
@@ -17,4 +16,3 @@ tint2
 feh
 git
 numlockx
-
