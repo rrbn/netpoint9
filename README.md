@@ -65,7 +65,7 @@ debug
 
 ## Netboot ##
 
-##### Debug seb2 ##### 
+##### Debug seb2 #####
 Example:
 ```bash
 Kernel vmlinuz
