@@ -9,7 +9,7 @@ lockPref("browser.shell.checkDefaultBrowser", false);
 
 // Custom Netpoint
 // Start Address
-lockPref("browser.startup.homepage","http://github.com/eqsoft/netpoint/");
+lockPref("browser.startup.homepage","https://github.com/eqsoft/netpoint9/");
 // Don't hide url bar
 lockPref("browser.fullscreen.autohide",false);
 // Disable Health Report
