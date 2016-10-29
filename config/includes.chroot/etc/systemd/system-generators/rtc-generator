@@ -17,14 +17,14 @@ ASKPWD_SERVICE="systemd-ask-password-wall.path"
 USER_SESSION="systemd-user-sessions.service"
 RUN_NODM="/run/systemd/generator.late/multi-user.target.wants/nodm.service"
 
-# disable nodm runlevel less then 5
-for _RC in rc2.d rc3.d rc4.d
+# disable nodm SysV runlevel
+for _RC in rc1.d rc2.d rc3.d rc4.d rc5.d
 do
 	NODM="$(ls /etc/${_RC}/*nodm)"
 	if [ -e "${NODM}" ]
 	then
 		rm "${NODM}"
-		cd /etc/${_RC} && ln ../init.d/nodm K01nodm
+		#cd /etc/${_RC} && ln ../init.d/nodm K01nodm
 	fi
 done
 
@@ -40,7 +40,7 @@ then
 fi
 
 # delete unused live components
-for _COMP in debconf gdm3 kdm lightdm lxdm slim gnome-panel-data gnome-power-manager gnome-screensaver kaboom kde-services policykit ssl-cert anacron xfce4-panel xscreensaver broadcom-sta
+for _COMP in debconf gdm3 kdm lightdm lxdm slim gnome-panel-data gnome-power-manager nodm gnome-screensaver kaboom kde-services policykit ssl-cert anacron xfce4-panel xscreensaver broadcom-sta
 do
 	COMP="$(ls /lib/live/config/????-${_COMP})"
 	if [ -e "${COMP}" ]
@@ -60,6 +60,11 @@ then
 	mkdir "${SYSTEM_ETC}/${MULTIUSER_TARGET}"
 fi
 
+if [ ! -d "${SYSTEM_ETC}/${GRAPHICAL_TARGET}" ]
+then
+	mkdir "${SYSTEM_ETC}/${GRAPHICAL_TARGET}"
+fi
+
 for _SERVICE in rtc.service rtc-tgz.service
 do
 	if [ -e "${SYSTEM_ETC}/${_SERVICE}" ]
@@ -74,6 +79,14 @@ do
 	then
 		ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${MULTIUSER_TARGET}/"
 	fi
+done
+
+for _SERVICE in nodm.service
+do
+        if [ -e "${SYSTEM_ETC}/${_SERVICE}" ]
+        then
+                ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${GRAPHICAL_TARGET}/"
+        fi
 done
 
 exit $?

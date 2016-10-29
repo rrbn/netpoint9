@@ -1,0 +1,21 @@
+[Unit]
+SourcePath=/etc/init.d/nodm
+Description=LSB: No Display Manager
+DefaultDependencies=no
+After=multi-user.target
+Before=graphical.target
+
+[Service]
+Type=forking
+Restart=no
+TimeoutSec=5min
+IgnoreSIGPIPE=no
+KillMode=process
+GuessMainPID=no
+RemainAfterExit=yes
+ExecStart=/etc/init.d/nodm start
+ExecStop=-/usr/local/bin/exit_browser
+ExecStop=/etc/init.d/nodm stop
+
+[Install]
+WantedBy=graphical.target
