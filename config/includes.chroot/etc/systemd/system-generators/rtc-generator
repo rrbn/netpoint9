@@ -6,10 +6,27 @@
 
 ## Enable the services with systemd.preset (https://www.freedesktop.org/software/systemd/man/systemd.preset.html) does not work
 
-echo "rtc generator"
+LIVE_CONFIG_CMDLINE="${LIVE_CONFIG_CMDLINE:-$(cat /proc/cmdline)}"
+
+_DEBUG=
+
+for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+do
+	case "${_PARAMETER}" in
+		debug)
+			_DEBUG="1"
+			;;
+	esac
+done
+
+echo "rtc-generator: debug=${_DEBUG}"
+
+SYSTEM_GENERATORS="/lib/systemd/system-generators"
+LIVE_CONFIG_GETTY_GENERATOR="live-config-getty-generator"
 SYSTEM_ETC="/etc/systemd/system"
 SYSTEM_LIB="/lib/systemd/system"
 BASIC_TARGET="basic.target.wants"
+GETTY_TARGET="getty.target"
 MULTIUSER_TARGET="multi-user.target.wants"
 GRAPHICAL_TARGET="graphical.target.wants"
 LOGIND_SERVICE="systemd-logind.service"
@@ -17,76 +34,70 @@ ASKPWD_SERVICE="systemd-ask-password-wall.path"
 USER_SESSION="systemd-user-sessions.service"
 RUN_NODM="/run/systemd/generator.late/multi-user.target.wants/nodm.service"
 
+#rm /lib/systemd/system/multi-user.target.wants/systemd-logind.service
+# only !debug mode? 
+#rm /lib/systemd/system/multi-user.target.wants/getty.target
+#rm /lib/systemd/system/graphical.target.wants/systemd-logind.service
+#rm /lib/systemd/system-generators/live-config-getty-generator
+
 # disable nodm SysV runlevel
 for _RC in rc1.d rc2.d rc3.d rc4.d rc5.d
 do
 	NODM="$(ls /etc/${_RC}/*nodm)"
-	if [ -e "${NODM}" ]
-	then
-		rm "${NODM}"
-		#cd /etc/${_RC} && ln ../init.d/nodm K01nodm
-	fi
+	rm "${NODM}" >/dev/null 2>&1
+done
+rm "${RUN_NODM}" >/dev/null 2>&1
+
+# disable getty.target, no login prompt 
+if [ ! "${_DEBUG}" = "1" ] 
+then
+	rm "${SYSTEM_LIB}/${MULTIUSER_TARGET}/getty.target" >/dev/null 2>&1
+fi
+
+# delete unused system generators
+for _SERVICE in "${LIVE_CONFIG_GETTY_GENERATOR}" 
+do
+	rm "${SYSTEM_GENERATORS}/${_SERVICE}" >/dev/null 2>&1
+done
+
+# delete unused services in MULTIUSER_TARGET
+for _SERVICE in "${LOGIND_SERVICE}" 
+do
+	rm "${SYSTEM_LIB}/${MULTIUSER_TARGET}/${_SERVICE}"
 done
 
 # mv session into graphical target
-for _SERVICE in "${LOGIND_SERVICE}" "${ASKPWD_SERVICE}" "${USER_SESSION}" 
+for _SERVICE in "${USER_SESSION}" 
 do
 	mv "${SYSTEM_LIB}/${MULTIUSER_TARGET}/${_SERVICE}" "${SYSTEM_LIB}/${GRAPHICAL_TARGET}/"
 done
 
-if [ -e "${RUN_NODM}" ]
-then
-	rm "${RUN_NODM}"
-fi
-
 # delete unused live components
-for _COMP in debconf gdm3 kdm lightdm lxdm slim gnome-panel-data gnome-power-manager nodm gnome-screensaver kaboom kde-services policykit ssl-cert anacron xfce4-panel xscreensaver broadcom-sta
+# deleting nodm too because of custom netpoint nodm.service
+for _COMP in debconf gdm3 kdm lightdm lxdm nodm slim gnome-panel-data gnome-power-manager gnome-screensaver kaboom kde-services policykit ssl-cert anacron xinit xfce4-panel xscreensaver broadcom-sta
 do
 	COMP="$(ls /lib/live/config/????-${_COMP})"
-	if [ -e "${COMP}" ]
-	then
-		rm "${COMP}"
-	fi
+	rm "${COMP}" >/dev/null 2>&1
 done
 
 # enable custom services
-if [ ! -d "${SYSTEM_ETC}/${BASIC_TARGET}" ]
-then
-	mkdir "${SYSTEM_ETC}/${BASIC_TARGET}"
-fi
-
-if [ ! -d "${SYSTEM_ETC}/${MULTIUSER_TARGET}" ]
-then
-	mkdir "${SYSTEM_ETC}/${MULTIUSER_TARGET}"
-fi
-
-if [ ! -d "${SYSTEM_ETC}/${GRAPHICAL_TARGET}" ]
-then
-	mkdir "${SYSTEM_ETC}/${GRAPHICAL_TARGET}"
-fi
+mkdir "${SYSTEM_ETC}/${BASIC_TARGET}" >/dev/null 2>&1
+mkdir "${SYSTEM_ETC}/${MULTIUSER_TARGET}" >/dev/null 2>&1
+mkdir "${SYSTEM_ETC}/${GRAPHICAL_TARGET}" >/dev/null 2>&1
 
 for _SERVICE in rtc.service rtc-tgz.service
 do
-	if [ -e "${SYSTEM_ETC}/${_SERVICE}" ]
-	then
-		ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${BASIC_TARGET}/"
-	fi
+	ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${BASIC_TARGET}/" >/dev/null 2>&1
 done
- 
+ ${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${GRAPHICAL_TARGET}/
 for _SERVICE in set-time.service dhclient.service
 do
-	if [ -e "${SYSTEM_ETC}/${_SERVICE}" ]
-	then
-		ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${MULTIUSER_TARGET}/"
-	fi
+	ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${MULTIUSER_TARGET}/" >/dev/null 2>&1
 done
 
 for _SERVICE in nodm.service
 do
-        if [ -e "${SYSTEM_ETC}/${_SERVICE}" ]
-        then
-                ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${GRAPHICAL_TARGET}/"
-        fi
+	ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${GRAPHICAL_TARGET}/" >/dev/null 2>&1
 done
 
 exit $?
