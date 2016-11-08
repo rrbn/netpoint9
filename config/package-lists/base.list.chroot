@@ -2,6 +2,8 @@ firmware-linux-free
 firmware-linux-nonfree
 isc-dhcp-client
 nano
+plymouth
+plymouth-themes
 xorg
 dbus
 dbus-x11
