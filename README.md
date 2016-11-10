@@ -30,9 +30,9 @@ take a look at the files in the included root filesystem:
 config/includes.chroot/*
 ```
 
-Copy config.iso or config.net to auto/config.
+Copy config.net or config.iso to auto/config.
 ```bash
-cp config.iso auto/config
+cp config.net auto/config
 ```
 create image
 ```bash
@@ -174,7 +174,7 @@ Setting a root password is not recommanded! To access the kiosk system add your 
 ```bash
 chmod 600 /etc/ssh/authorized_keys
 ``` 
-But it is possible to set a crypted root password with xrootpwd=CRYPTROOTPWD kernel param. You can generate a crypted password with:
+Although it is possible to set a crypted root password with xrootpwd=CRYPTROOTPWD kernel param. You can generate a crypted password with:
 ```bash
 mkpasswd ROOTPWD
 ```
@@ -213,7 +213,7 @@ xtgzurl=https://192.168.16.12/tgzrepo
 xtgzhost=1
 ```
 
-A simple way for overlaying the root filesystem on boot time is providing a tgz archive on a webserver with a root folder fs_overly and a root filesystem structure.
+A simple way for overlaying the root filesystem on boot process is providing a tgz archive on a webserver with a root folder fs_overly and a root filesystem structure.
 This can either be a full url to a tgz file or an archive with a HOSTNAME.tgz. This is not as flexible as the git repo, because the clients can only be configured with one tgz file (tgzhost=0)
 or every client gets his own host tgz file.
 The wget clients user-agent is set to the xrtcagent param, so requests can be restricted to the image itself (see xrtcagent)       
