@@ -3,4 +3,5 @@
 # shutdown_system
 #
 
+pkill start_browser
 systemctl -ff poweroff -f
