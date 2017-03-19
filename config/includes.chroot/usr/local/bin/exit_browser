@@ -7,11 +7,6 @@
 
 FIREFOX="firefox"
 
-if [ -d "/etc/firefox-esr" ] 
-then
-	FIREFOX="firefox-esr"
-fi
-
 # first exit all start_xxx process loops (see /etc/xdg/openbox/autostart)
 if [ $(pidof -x start_browser) ] 
 then

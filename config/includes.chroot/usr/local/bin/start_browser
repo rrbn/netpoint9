@@ -7,11 +7,6 @@ CMD=""
 CONFIG=""
 FIREFOX="firefox"
 
-if [ -d "/etc/firefox-esr" ] 
-then
-	FIREFOX="firefox-esr"
-fi
-
 if [ ! -d "${PROFILE}" ]
 then
 	mkdir "${PROFILE}"

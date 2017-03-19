@@ -9,9 +9,15 @@
 
 set -e
 
+if [ -x '/usr/bin/firefox-esr' ]
+then
+	ln -sf /usr/bin/firefox-esr /usr/bin/firefox
+fi
+
 if [ -d '/etc/firefox-esr' ]
 then
-	ln -sf /etc/firefox-esr /etc/firefox	
+	rm -r /etc/firefox-esr
+	ln -sf /etc/firefox /etc/firefox-esr	
 fi
 
 if [ -d '/usr/lib/firefox-esr' ]
