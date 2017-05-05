@@ -50,7 +50,7 @@
 
 <theme>
   <name>Clearlooks</name>
-  <titleLayout>NLIMC</titleLayout>
+  <titleLayout>C</titleLayout>
   <!--
       available characters are NDSLIMC, each can occur at most once.
       N: window icon
