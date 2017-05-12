@@ -52,7 +52,7 @@ do_httpmount ()
 
 							*)
 								log_begin_msg "Trying wget ${url} -O ${dest}/$(basename ${url})"
-								wget --user-agent="${RTC_AGENT}" "${url}" -O "${dest}/$(basename ${url})"
+								wget --no-check-certificate --user-agent="${RTC_AGENT}" "${url}" -O "${dest}/$(basename ${url})"
 								;;
 						esac
 					else
