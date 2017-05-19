@@ -1,7 +1,15 @@
 #!/bin/sh
 
-host=$HOSTNAME
+. /etc/environment
+
 gitpath=""
+
+GitLoad () {
+	echo "try to load rtc repo: ${xgiturl} ${gitpath}"
+	eval cd /tmp && git clone --depth=1 -b "${gitpath}" --single-branch "${xgiturl}" && cp -a "${xgitreponame}"/fs_overlay/* / && rm -r "${xgitreponame}"
+	# unfortunately github does not support remote archive, hrz gitolite does:
+	# eval cd / && git archive --format=tar --remote="${giturl}" | tar xf - --strip-components=1
+}
 
 if [ -z "${xgiturl}" ] || [ -z "${xgitreponame}" ] 
 then
@@ -9,6 +17,9 @@ then
 	return 0
 fi
 
+echo "add ssh key for agent..."
+. /usr/local/bin/start_ssh
+	
 if [ ! -z "${xgitbranch}" ] ; then
 	#repo=""
 	repo=$(/usr/bin/git ls-remote "${xgiturl}" "${xgitbranch}")
@@ -35,9 +46,3 @@ if [ "${xgithost}" = "1" ] ; then
 fi
 
 
-GitLoad () {
-	echo "try to load rtc repo: ${xgiturl} ${gitpath}"
-	eval cd /tmp && git clone --depth=1 -b "${gitpath}" --single-branch "${xgiturl}" && cp -a "${xgitreponame}"/fs_overlay/* / && rm -r "${xgitreponame}"
-	# unfortunately github does not support remote archive, hrz gitolite does:
-	# eval cd / && git archive --format=tar --remote="${giturl}" | tar xf - --strip-components=1
-}

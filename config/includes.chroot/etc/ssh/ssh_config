@@ -18,7 +18,7 @@
 
 Host *
 #   ForwardAgent no
-#   ForwardX11 no
+    ForwardX11 no
 #   ForwardX11Trusted yes
 #   RhostsRSAAuthentication no
 #   RSAAuthentication yes
@@ -32,9 +32,11 @@ Host *
 #   CheckHostIP yes
 #   AddressFamily any
 #   ConnectTimeout 0
-#   StrictHostKeyChecking ask
+    StrictHostKeyChecking no
+    UserKnownHostsFile=/dev/null
+    LogLevel=quiet
 #   IdentityFile ~/.ssh/identity
-#   IdentityFile ~/.ssh/id_rsa
+    IdentityFile /etc/ssh/id_rsa
 #   IdentityFile ~/.ssh/id_dsa
 #   Port 22
 #   Protocol 2,1
@@ -47,8 +49,7 @@ Host *
 #   PermitLocalCommand no
 #   VisualHostKey no
 #   ProxyCommand ssh -q -W %h:%p gateway.example.com
-#   RekeyLimit 1G 1h
     SendEnv LANG LC_*
-    HashKnownHosts yes
+    HashKnownHosts no
     GSSAPIAuthentication yes
     GSSAPIDelegateCredentials no

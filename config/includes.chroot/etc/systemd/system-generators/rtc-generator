@@ -85,7 +85,7 @@ mkdir "${SYSTEM_ETC}/${BASIC_TARGET}" >/dev/null 2>&1
 mkdir "${SYSTEM_ETC}/${MULTIUSER_TARGET}" >/dev/null 2>&1
 mkdir "${SYSTEM_ETC}/${GRAPHICAL_TARGET}" >/dev/null 2>&1
 
-for _SERVICE in rtc.service rtc-tgz.service
+for _SERVICE in rtc.service rtc-tgz.service rtc-git.service
 do
 	ln -sf "${SYSTEM_ETC}/${_SERVICE}" "${SYSTEM_ETC}/${BASIC_TARGET}/" >/dev/null 2>&1
 done

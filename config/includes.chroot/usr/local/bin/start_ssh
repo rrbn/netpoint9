@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. /etc/environment
+
 env=/etc/ssh/agent.env
 privkey=""
 
@@ -62,7 +64,7 @@ agent_start () {
 }
 
 agent_add () { 
-	eval /usr/local/bin/add_ssh_pass "${privkey}" "${xrtckey}" 
+	eval /usr/local/bin/add_ssh_pass "${privkey}" "${xrtcagent}" 
 }
 
 SshAgentStart

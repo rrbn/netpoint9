@@ -1,0 +1,16 @@
+[Unit]
+Description=getting runtime config from git repos 
+Before=basic.target
+ConditionKernelCommandLine=xrtcrepo=git
+ConditionPathExists=/etc/environment
+After=rtc.service
+DefaultDependencies=no
+JobTimeoutSec=15
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/rtc_git
+RemainAfterExit=yes
+
+[Install]
+WantedBy=basic.target
