@@ -1,48 +1,55 @@
 #!/bin/sh
 
+ME="${0##*/}"
+
+echo ${ME}
+
 . /etc/environment
+. /usr/local/bin/rtc_fallback
 
 gitpath=""
 
-GitLoad () {
-	echo "try to load rtc repo: ${xgiturl} ${gitpath}"
-	eval cd /tmp && git clone --depth=1 -b "${gitpath}" --single-branch "${xgiturl}" && cp -a "${xgitreponame}"/fs_overlay/* / && rm -r "${xgitreponame}"
-	# unfortunately github does not support remote archive, hrz gitolite does:
-	# eval cd / && git archive --format=tar --remote="${giturl}" | tar xf - --strip-components=1
+GitLoad() {
+        echo "try to load rtc repo: ${xgiturl} ${gitpath}"
+        eval cd /tmp && git clone --depth=1 -b "${gitpath}" --single-branch "${xgiturl}" && cp -a "${xgitreponame}"/fs_overlay/* / && rm -r "${xgitreponame}"
+	if [ $? -eq 0 ] ; then
+		echo "GitLoad ok"
+	else 
+		exit $1
+	fi
 }
 
-if [ -z "${xgiturl}" ] || [ -z "${xgitreponame}" ] 
+trap 'Fallback' EXIT
+
+if [ -z "${xgiturl}" ] || [ -z "${xgitreponame}" ]
 then
-	echo "giturl or gitreponame needed, abort!"
-	return 0
+        echo "xgiturl and xgitreponame in kernel params needed, abort!"
+        exit 1
 fi
 
 echo "add ssh key for agent..."
 . /usr/local/bin/start_ssh
-	
-if [ ! -z "${xgitbranch}" ] ; then
-	#repo=""
-	repo=$(/usr/bin/git ls-remote "${xgiturl}" "${xgitbranch}")
-	if [ -z "${repo}" ]
-	then
-		echo "no git branch found: ${xgiturl} ${xgitbranch}"
-	else
-		echo "git branch found: ${repo}"
-		gitpath="${xgitbranch}"
-		GitLoad
-	fi
+
+repo=$(/usr/bin/git ls-remote "${xgiturl}" "${xrtcbranch}")
+if [ -z "${repo}" ] ; then
+	echo "no git branch found: ${xgiturl} ${xrtcbranch}"
+	exit 1
+else
+	echo "git branch found: ${repo}"
+	gitpath="${xrtcbranch}"
+	GitLoad
 fi
 
-if [ "${xgithost}" = "1" ] ; then
-	#repo=""
-	repo=$(/usr/bin/git ls-remote "${xgiturl}" "${host}")
-	if [ -z "${repo}" ] ; then
-		echo "no host repo found: ${xgiturl} ${host}"
-	else
-		gitpath="${host}"
-		echo "host repo found: ${repo}"
-		GitLoad
-	fi
+# override branch with xrtchost
+if [ "${xrtchost}" = "1" ] ; then
+        #repo=""
+        repo=$(/usr/bin/git ls-remote "${xgiturl}" "${host}")
+        if [ -z "${repo}" ] ; then
+                echo "no host repo found: ${xgiturl} ${host}"
+		exit 1
+        else
+                gitpath="${host}"
+                echo "host repo found: ${repo}"
+                GitLoad
+        fi
 fi
-
-

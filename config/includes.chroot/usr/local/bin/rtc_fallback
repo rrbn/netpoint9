@@ -1,0 +1,29 @@
+#!/bin/sh
+
+BRANCH="${xrtcbranch}"
+
+# default to master branch
+if [ ! "${xrtcbranch}" ] ; then
+        xrtcbranch="master"
+fi
+
+Fallback() {
+        if [ $? -eq 0 ]; then
+                echo "${ME} ok"
+        else
+                echo "${ME} failed"
+                if [ ! -z "${xrtcfallback}" ] ; then
+                        FB=rtc_"${xrtcfallback}"
+                        # check if i am the fallback
+                        if [ "${FB}" = "${ME}" ] ; then
+                                echo "i am already the fallback script: ${FB}"
+                        else
+                                echo "try fallback ..."
+                                eval cd /usr/local/bin && ./${FB}
+			fi
+                else
+                        echo "no fallback defined"
+                fi
+        fi
+        exit $?
+}

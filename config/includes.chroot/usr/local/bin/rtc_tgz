@@ -1,27 +1,41 @@
 #!/bin/sh
 
+ME="${0##*/}"
+
+echo ${ME}
+
 . /etc/environment
+. /usr/local/bin/rtc_fallback
 
-echo "exec rtc-tgz"
+url=""
 
-if [ -z "${xtgzurl}" ] ; then
-	echo "tgzurl needed, aborted!"
-	exit 1
+TgzLoad() {
+	echo "try to load tgz repo: ${url}"
+	eval cd /tmp && wget --user-agent="${xrtcagent}" --no-check-certificate -qO- ${url} | tar xz && cp -r fs_overlay/* / && rm -r fs_overlay
+	if [ $? = 0 ] ; then
+		echo "TgzLoad ok"
+	else
+		exit $1
+	fi
+}
+
+trap 'Fallback' EXIT
+
+if [ -z "${xtgzurl}" ] || [ -z "${xrtcagent}" ]
+then
+	echo "xtgzurl and xrtcagent in kernel params needed, abort!"
+        exit 1
 fi
 
-if [ -z "${xrtcagent}" ] ; then
-	echo "xrtcagent needed, aborted!"
-	exit 1
+if [ "${xhost}" = "1" ] ; then
+	url="${xtgzurl}/${host}.tgz"
 fi
 
-if [ "${xtgzhost}" = "1" ] ; then
-	tgzurl="${xtgzurl}/${host}.tgz"
+url="${xtgzurl}/${xrtcbranch}/fs_overlay.tgz"
+
+TgzLoad
+
+if [ "${xrtchost}" = "1" ] ; then
+	url="${xtgzurl}/${host}/fs_overlay.tgz"
+	TgzLoad
 fi
-
-echo "try to load rtc tgz file: ${xtgzurl}"
-cd /tmp && wget --user-agent="${xrtcagent}" --no-check-certificate -qO- $xtgzurl | tar xz && cp -r fs_overlay/* / && rm -r fs_overlay
-
-echo "rtc-tgz done"
-exit $?
-
-
