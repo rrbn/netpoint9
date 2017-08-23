@@ -8,6 +8,7 @@ lb config noauto \
 	--bootappend-live "boot=live components config locales=de_DE.UTF-8 keyboard-layouts=de username=npuser xpanel=1 xnumlock=1 xexit=1 xterminal=1 xscreensaver=1 xscreensaverwatch=1 xrtckey=password" \
 	--debootstrap-options "--variant=minbase" \
 	--archive-areas "main contrib non-free" \
+	--bootloader "syslinux" \
 	--apt-recommends "false" \
 	--apt-indices "false" \
 	"${@}"
