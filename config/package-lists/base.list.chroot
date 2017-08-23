@@ -1,5 +1,6 @@
 firmware-linux-free
 firmware-linux-nonfree
+wget
 isc-dhcp-client
 nano
 plymouth
