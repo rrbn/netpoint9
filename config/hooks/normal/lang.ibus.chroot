@@ -6,5 +6,4 @@ gconftool --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults \
 gconftool --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults \
 --type list --list-type===string \
 --set /desktop/ibus/general/hotkey/trigger [Shift+space,Zenkaku_Hankaku,Alt+Kanji]
-
- 
+fi 
