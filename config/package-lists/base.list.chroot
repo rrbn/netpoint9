@@ -22,3 +22,13 @@ numlockx
 nfs-common
 expect
 xbacklight
+ibus
+ibus-mozc
+mozc-utils-gui
+ibus-gtk
+ibus-gtk3
+ibus-qt4
+ibus-clutter
+fonts-takao
+im-config
+volti 
