@@ -11,3 +11,6 @@ LANG=de_DE.UTF8
 # http://www.google.com/search?q=how+to+set+keyboard+layout+xorg
 #xbrowser="firefox"
 #xpanel="1"
+export GTK_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULE=ibus
