@@ -10,4 +10,5 @@ sudo flush_logs &
 sudo lock_cmdline &
 start ibus-daemon -d &
 volti &
+start xbacklight
 
