@@ -49,13 +49,12 @@ then
 fi
 
 # fetch latest flashplayer for firefox (plugin NPAPI)
-
-if [ ! -d "/usr/lib/firefox-esr/browser/plugins" ] 
-then
-       mkdir -p /usr/lib/firefox-esr/browser/plugins
-fi
-cd  /usr/lib/firefox-esr/browser/plugins
-wget --no-check-certificate https://fpdownload.macromedia.com/pub/labs/flashruntimes/flashplayer/linux64/libflashplayer.so
-chmod 755 libflashplayer.so
+#if [ ! -d "/usr/lib/firefox-esr/browser/plugins" ] 
+#then
+#       mkdir -p /usr/lib/firefox-esr/browser/plugins
+#fi
+#cd  /usr/lib/firefox-esr/browser/plugins
+#wget --no-check-certificate https://fpdownload.macromedia.com/pub/labs/flashruntimes/flashplayer/linux64/libflashplayer.so
+#chmod 755 libflashplayer.so
 
 exit 0
